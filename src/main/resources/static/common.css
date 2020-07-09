@@ -1,0 +1,38 @@
+.navbar-wrap{
+    margin-top: 90px;
+    width: 1300px;
+    color: #6E6363;
+}
+
+.desk-wrap{
+    height: 700px;
+    width: 1300px;
+    background: whitesmoke;
+    color: #6E6363;
+}
+
+.button-log-in-out-wrap{
+    width: 90px;
+}
+
+/*Удаление пробелов между колонками*/
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+> .col,
+> [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+}
+
+/*Настройка скрола*/
+.pre-scrollable {
+    max-height: 2000px;
+    overflow-y: scroll;
+}
+
+.trans-btn{
+    background: transparent;
+    border: none !important;
+}

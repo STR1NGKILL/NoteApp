@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Регистрация</title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
+</head>
+<body style="background: #FFCA73">
+<br>
+<center>
+    <div class="card bg-light mb-4 shadow-sm" style="width: 21rem; margin-top: 250px">
+        <a class="btn btn-primary rounded-0" th:href="@{/main}"><i class="fas fa-home"></i>   На главную</a>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-12 align-items-center">
+                    <div class="display-4" style="font-size: 20pt">Регистрация</div>
+                </div>
+            </div>
+            <br>
+            <div style="width: 15rem;alignment: center">
+                <form method="POST" th:action="@{/registration}" th:object="${user}">
+                    <fieldset>
+                        <div th:if="${#fields.hasErrors('username')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg is-invalid" placeholder="Введите логин"
+                                       required="true" th:field="*{username}" type="text">
+                                <div class="invalid-feedback" th:errors="*{username}">
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${!#fields.hasErrors('username')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg" placeholder="Введите логин"
+                                       required="true" th:field="*{username}" type="text">
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('email')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg is-invalid" placeholder="Введите e-mail"
+                                       required="true" th:field="*{email}" type="email">
+                                <div class="invalid-feedback" th:errors="*{email}"></div>
+                            </div>
+                        </div>
+                        <div th:if="${!#fields.hasErrors('email')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg" placeholder="Введите e-mail"
+                                       required="true" th:field="*{email}" type="email"/>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('password')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg is-invalid" placeholder="Введите пароль"
+                                       required="true" th:field="*{password}" type="password">
+                                <div class="invalid-feedback" th:errors="*{password}"></div>
+                            </div>
+
+                        </div>
+                        <div th:if="${!#fields.hasErrors('password')}">
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg" placeholder="Введите пароль"
+                                       required="true" th:field="*{password}" type="password">
+                            </div>
+
+                        </div>
+
+
+                        <input class="btn btn btn-primary btn-block" style="width: 150px" type="submit" value="Регистрация"/>
+                    </fieldset>
+                    <br>
+                    <span>Уже есть аккаунт? <a th:href="@{/login}">Войти</a></span><br>
+                    <div th:errors="*{password}" th:if="${#fields.hasErrors('activeStatus')}">
+                        <div class="alert alert-danger">
+                            Ваш аккаунт отключен!
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br/>
+    </div>
+    </div>
+</center>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User-page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta charset="utf-8">
+    <title>Admin Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
+    <link href="../../static/common.css" rel="stylesheet">
+
+</head>
+<body style="background: #FFCA73">
+
+<!--Тело-->
+<div class="container-fluid">
+
+    <div class="row no-gutters">
+        <div  class="col"></div>
+        <div  class="col-auto">
+            <div class="navbar-wrap">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm nav-panel" style="width: 1300px; color: #6E6363;">
+                    <a class="navbar-brand">NoteApp</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div sec:authorize="isAuthenticated()" class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/notes">Заметки</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/categories">Категории</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/labels">Метки</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/main">Профиль</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/main">Корзина</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/main">Поддержка</a>
+                            </li>
+                        </ul>
+                        <div class="navbar-text mr-3" sec:authentication="name"></div>
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-sm btn-outline-danger" type="submit" style="width: 80px">Выход</button>
+                        </form>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+        <div  class="col"></div>
+    </div>
+
+    <div class="row no-gutters" style="padding-top: 30px">
+        <div class="col" style="width: 200px;"></div>
+        <div class="col-auto">
+            <div class="desk-wrap shadow-sm">
+
+                <!--Часть для вставки-->
+
+                <table class="table table-hover" id="mydatatable" style="width:100%">
+                    <thead>
+                    <tr class="table-secondary">
+                        <th class="align-middle">Категория</th>
+                        <th class="align-middle">Название</th>
+                        <th class="align-middle">Текст</th>
+                        <th class="align-middle">Последнее изменение</th>
+                        <th class="align-middle">Метки</th>
+                        <th class="align-middle"></th>
+                        <th class="align-middle"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="note : ${notes}">
+                        <td th:utext="${note.getCategory().getName()}">...</td>
+                        <td th:utext="${note.getName()}">...</td>
+                        <td th:utext="${note.getText()}">...</td>
+                        <td th:utext="${note.getTime()}">...</td>
+                        <td th:utext="${note.getLabels()}">...</td>
+                        <td><a class="btn btn-success"
+                               th:href="@{/admin/items/{id}/edit(id=${note.getId()})}">Редактировать</a>
+                        </td>
+                        <td><a class="btn btn-danger"
+                               th:href="@{/admin/category/{c_id}/items/{i_id}/delete(c_id=${note.getCategory().getId()},i_id=${note.getId()})}">Удалить</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!--Конец вставки-->
+
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+
+</div>
+<!--Конец-->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js" type="text/javascript"></script>
+<script charset="utf8" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"
+        type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#mydatatable").DataTable({
+            "pagingType": "full_numbers",
+            "paging": false,
+            "ordering": true,
+            "info": true,
+            "language": {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ категорий на странице",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 (из 0 записей)",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "<<",
+                    "previous": "<",
+                    "next": ">",
+                    "last": ">>"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                },
+                "select": {
+                    "rows": {
+                        "_": "Выбрано записей: %d",
+                        "0": "Кликните по записи для выбора",
+                        "1": "Выбрана одна запись"
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
