@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Регистрация</title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
+</head>
+<body>
+<br>
+<center>
+
+    <div class="card bg-light mb-3 badge-pill" style="width: 75rem;">
+        <div class="card-body">
+            <div class="container">
+                <h4 class="display-4" style="margin-bottom: 15px">Восстановление пароля!</h4>
+                <span style="font-size: x-large">На указанную в аккаунте эл. почту отправлено письмо с инструкцией по восстановлению пароля.</span><br><br>
+            </div>
+
+            <img height="300px" src="https://s.tcdn.co/8ff/0c9/8ff0c98e-7c85-35d5-89a7-8fd51d5cbfff/8.png">
+            <br>
+            <br>
+            <div style="width: 50rem;alignment: center">
+                <a class="btn btn-lg btn-success shadow-sm badge-pill" style="color: white; width: 200px" th:href="@{/login}">Отлично</a>
+            </div>
+        </div>
+        <br/>
+    </div>
+
+</center>
+</body>
+</html>

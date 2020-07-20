@@ -7,19 +7,19 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
 </head>
-<body style="background: #FFCA73">
+<body>
 <br>
 <center>
-    <div class="card bg-light mb-4 shadow-sm" style="width: 21rem; margin-top: 250px">
+    <div class="card bg-light mb-4 shadow-sm" style="width: 26rem; margin-top: 250px; background: white">
         <a class="btn btn-primary rounded-0" th:href="@{/main}"><i class="fas fa-home"></i>   На главную</a>
-        <div class="card-body">
+        <div class="card-body" style="background: white">
             <div class="row align-items-center">
                 <div class="col-12 align-items-center">
                     <div class="display-4" style="font-size: 20pt">Регистрация</div>
                 </div>
             </div>
             <br>
-            <div style="width: 15rem;alignment: center">
+            <div style="width: 20rem;alignment: center">
                 <form method="POST" th:action="@{/registration}" th:object="${user}">
                     <fieldset>
                         <div th:if="${#fields.hasErrors('username')}">
@@ -55,14 +55,22 @@
                                        required="true" th:field="*{password}" type="password">
                                 <div class="invalid-feedback" th:errors="*{password}"></div>
                             </div>
-
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg is-invalid"
+                                       placeholder="Подтвердите пароль"
+                                       required="true" th:field="*{confirmPassword}" type="password">
+                                <div class="invalid-feedback" th:errors="*{password}"></div>
+                            </div>
                         </div>
                         <div th:if="${!#fields.hasErrors('password')}">
                             <div class="form-group">
                                 <input autofocus="true" class="form-control input-lg" placeholder="Введите пароль"
                                        required="true" th:field="*{password}" type="password">
                             </div>
-
+                            <div class="form-group">
+                                <input autofocus="true" class="form-control input-lg" placeholder="Подтвердите пароль"
+                                       required="true" th:field="*{confirmPassword}" type="password">
+                            </div>
                         </div>
 
 
@@ -72,15 +80,21 @@
                     <span>Уже есть аккаунт? <a th:href="@{/login}">Войти</a></span><br>
                     <div th:errors="*{password}" th:if="${#fields.hasErrors('activeStatus')}">
                         <div class="alert alert-danger">
-                            Ваш аккаунт отключен!
+                            Ваш аккаунт не активен!
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        <br/>
     </div>
     </div>
 </center>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
 </body>
 </html>

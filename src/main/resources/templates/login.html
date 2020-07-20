@@ -7,12 +7,12 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
 </head>
-<body style="background: #FFCA73">
+<body>
 <br>
 <center>
-    <div class="card bg-light mb-4 shadow-sm" style="width: 21rem; margin-top: 250px">
+    <div class="card bg-light mb-4 shadow-sm" style="width: 20rem; margin-top: 250px; background: #FFFFFF" >
         <a class="btn btn-primary rounded-0" th:href="@{/main}"><i class="fas fa-home"></i>   На главную</a>
-        <div class="card-body">
+        <div class="card-body" style="background: #FFFFFF">
             <div class="row align-items-center">
                 <div class="col-12 align-items-center">
                     <div class="display-4" style="font-size: 20pt">Вход</div>
@@ -22,16 +22,6 @@
             <div style="width: 15rem;alignment: center">
                 <form method="post" th:action="@{/login}">
                     <fieldset>
-                        <div th:if="${param.error}">
-                            <div class="alert alert-danger">
-                                Неверный никнейм и(или) пароль
-                            </div>
-                        </div>
-                        <div th:if="${param.logout}">
-                            <div class="alert alert-info">
-                                Выход успешно выполнен!
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             <input autofocus="true" class="form-control input-lg" id="username" name="username"
@@ -45,13 +35,30 @@
 
                     </fieldset>
                 </form>
-                <br>
-                <span>Ещё нет аккаунта? <a th:href="@{/registration}">Зарегистрироваться</a></span>
+                <div style="padding-top: 15px">
+                    <span >Ещё нет аккаунта? <a th:href="@{/registration}">Зарегистрироваться</a></span>
+                </div>
+                <div style="padding-top: 15px">
+                    <a th:href="@{/recovering}">Забыли пароль?</a>
+                </div>
             </div>
         </div>
-        <br/>
     </div>
+
+    <div th:if="${param.error}" style="padding-top: 0px">
+        <div class="alert alert-danger" style="width: 20rem">
+            Неверное имя пользователя или пароль
+        </div>
     </div>
+
 </center>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+
 </body>
 </html>

@@ -3,6 +3,10 @@ package org.reallume.domain;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Entity()
@@ -13,18 +17,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
     @NotNull
     private String username;
 
     @NotNull
     private String password;
 
-    @NotNull
-    private String email;
+    @Transient
+    private String confirmPassword;
 
     @NotNull
-    private String name;
+    private String email;
 
     @NotNull
     private Boolean activeStatus;
@@ -33,6 +36,11 @@ public class User {
 
     @NotNull
     private String role;
+
+    private Date lastLogin;
+
+    @NotNull
+    private Date registDate;
 
     @Lob
     private byte[] image;
@@ -48,17 +56,22 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Note> notes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="userStat_id")
+    private UserStat userStat;
+
 
     public User(){
     }
 
-    public User(String username, String password, String email, String name, Boolean activeStatus, String token) {
+    public User(String username, String password, String confirmPassword, String email, String name, Boolean activeStatus, String token) {
         this.username = username;
         this.password = password;
+        this.confirmPassword = confirmPassword;
         this.email = email;
-        this.name = name;
         this.activeStatus = activeStatus;
         this.token = token;
+        this.registDate = new Date();
     }
 
     public Long getId() {
@@ -91,14 +104,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Boolean getActiveStatus() {
@@ -173,9 +178,53 @@ public class User {
         this.notes = notes;
     }
 
-    public void eraseNotes(){
-        this.notes.clear();
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 
+    public String getLastLogin() {
+        if(this.lastLogin != null) {
+            SimpleDateFormat dateFormat = null;
+
+            dateFormat = new SimpleDateFormat("d MMMM yyyy H:m:s");
+
+            return dateFormat.format(this.lastLogin);
+        }else
+            return "Не входил";
+    }
+
+    public void setLastLogin() {
+        this.lastLogin = new Date();
+    }
+
+    public String getRegistDate() {
+        if(this.registDate != null) {
+            SimpleDateFormat dateFormat = null;
+
+            dateFormat = new SimpleDateFormat("d MMMM yyyy ");
+
+            return dateFormat.format(this.registDate);
+        }else
+            return "Не регистрировался";
+    }
+
+    public Date getRegistDateOrigin(){
+        return registDate;
+    }
+
+    public void setRegistDate(Date registDate) {
+        this.registDate = registDate;
+    }
+
+    public UserStat getUserStat() {
+        return userStat;
+    }
+
+    public void setUserStat(UserStat userStat) {
+        this.userStat = userStat;
+    }
 }

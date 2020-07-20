@@ -23,61 +23,57 @@ public class LabelController {
     private UserRepo userRepo;
 
 
-    //Редактирование метки
-    @PostMapping(value = "/user/labels/edit")
-    public String userEditALabel(Authentication authentication,
-                                   @RequestParam long label_id,
-                                   @RequestParam String name,
-                                   Model model) throws IOException {
-
-        User user = userRepo.findByUsername(authentication.getName()).get();
-
-        Label label = new Label();
-        label.setAuthor(user);
-        label.setId(label_id);
-        label.setName(name);
-
-        labelRepo.save(label);
-        loadLabelsToUser(user);
-
-        return "redirect:/user/categories-and-labels";
-    }
-
     //Добавление метки
-    @PostMapping(value = "/user/labels/add")
-    public String userAddLabel(Authentication authentication,
-                                  @RequestParam String name,
-                                  Model model) {
+    @RequestMapping(value = "/user/notes/add/labels/add")
+    public String userAddLabelToNewNote(Authentication authentication,
+                                        @ModelAttribute("labels") List<Label> labels,
+                                        @RequestParam String name,
+                                        Model model) {
 
         User user = userRepo.findByUsername(authentication.getName()).get();
         model.addAttribute("user", user);
 
-        Label label = new Label();
+        Label label = new Label(name, user);
+        labels.add(label);
 
-        label.setName(name);
-        label.setAuthor(user);
-
-        labelRepo.save(label);
-        loadLabelsToUser(user);
-
-        return "redirect:/user/categories-and-labels";
+        return "redirect:/user/notes/add";
     }
 
 
-    //Удаление метки - кнопка
-    @RequestMapping(value = "/user/labels/delete")
+    //Удаление метки
+    @GetMapping(value = "/user/notes/add/labels/{label_id}/delete")
     public String userDeleteLabel(Authentication authentication,
-                                     @RequestParam long label_id,
-                                     Model model) {
+                                  @ModelAttribute("labels") List<Label> labels,
+                                  @PathVariable long label_id,
+                                  Model model) {
         User user = userRepo.findByUsername(authentication.getName()).get();
         model.addAttribute("user", user);
 
-        labelRepo.deleteByIdAndAuthor(label_id, user);
+        labels.remove(findLabelById(labels, label_id));
 
-        loadLabelsToUser(user);
+        model.addAttribute("labels", labels);
 
-        return "redirect:/user/categories-and-labels";
+        //labelRepo.deleteByIdAndAuthor(label_id, user);
+        //loadLabelsToUser(user);
+
+
+        return "redirect:/user/notes/add/labels/add";
     }
+
+
+    Label findLabelById(List<Label> labels, Long label_id) {
+
+        Label label = null;
+
+        for (Label itLabel: labels) {
+            if (itLabel.getId().equals(label_id)) {
+                label = itLabel;
+                return label;
+            }
+        }
+        return label;
+    }
+
 
     void loadLabelsToUser(User user) {
 

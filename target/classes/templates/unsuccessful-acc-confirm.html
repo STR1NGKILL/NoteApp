@@ -9,19 +9,21 @@
 <body>
 <br>
 <center>
-    <div class="card bg-light mb-3" style="width: 100rem;">
+    <div class="card bg-light mb-3 badge-pill" style="width: 75rem;">
         <div class="card-body">
             <div class="container">
-                <h4 class="display-4" style="margin-bottom: 15px">Ошибка при активации аккаунта!</h4>
+                <h4 class="display-4" style="margin-bottom: 15px">Ошибка активации аккаунта!</h4>
+                <span style="font-size: x-large">Использован неверный код активации</span><br><br>
             </div>
-            <img height="100px" src="https://i.ibb.co/MDLjHLg/close.png">
-            <br><br>
-            <span style="font-size: large">Вы указали неправильный код активации!</span><br><br>
-            <a class="btn btn-primary" th:href="@{/main}">Перейти на главную страницу</a>&nbsp;&nbsp;<a
-                class="btn btn-primary" th:href="@{/login}">Перейти на страницу входа</a>
+
+            <img height="300px" src="https://s.tcdn.co/747/d48/747d480a-1032-348f-94ed-2e948215a11d/47.png">
+            <br>
+            <br>
+            <div style="width: 50rem;alignment: center">
+                <a class="btn btn-lg btn-success shadow-sm badge-pill" style="color: white; width: 200px" th:href="@{/login}">Уйти</a>
+            </div>
         </div>
         <br/>
-    </div>
     </div>
 </center>
 </body>

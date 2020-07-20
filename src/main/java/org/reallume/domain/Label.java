@@ -2,6 +2,7 @@ package org.reallume.domain;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,13 +18,9 @@ public class Label {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "label_note",
-            joinColumns = { @JoinColumn(name = "label_id")},
-            inverseJoinColumns = { @JoinColumn(name = "note_id")}
-    )
-    private List<Note> notes;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "note_id", nullable = false)
+    private Note note;
 
     public Label() {
     }
@@ -45,11 +42,11 @@ public class Label {
 
     public void setAuthor(User author) { this.author = author; }
 
-    public List<Note> getNotes() {
-        return notes;
+    public Note getNote() {
+        return note;
     }
 
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
+    public void setNote(Note note) {
+        this.note = note;
     }
 }

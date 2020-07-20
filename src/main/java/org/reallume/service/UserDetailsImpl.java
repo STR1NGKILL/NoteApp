@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -16,11 +17,13 @@ public class UserDetailsImpl implements UserDetails {
 
     private String userName;
     private String password;
+    private String email;
     private boolean isActive;
     private List<GrantedAuthority> authorities;
 
     public UserDetailsImpl(User user) {
         this.userName = user.getUsername();
+        this.email = user.getEmail();
         this.password = user.getPassword();
         this.isActive = user.getActiveStatus();
         this.authorities = Arrays.stream(user.getRole().split(","))
@@ -54,6 +57,8 @@ public class UserDetailsImpl implements UserDetails {
     public void setUsername(String username) {
         this.userName = username;
     }
+
+    public String getEmail(){ return email; }
 
     @Override
     public boolean isAccountNonExpired() {

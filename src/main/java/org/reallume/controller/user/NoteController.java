@@ -11,11 +11,13 @@ import org.reallume.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Controller
@@ -45,15 +47,21 @@ public class NoteController {
         List<Category> categories = user.getCategories();
         List<Note> notes = user.getNotes();
 
+
+
         model.addAttribute("categories", categories);
         model.addAttribute("notes", notes);
+
+        Integer currentPage = 0;
+        model.addAttribute("currentPage", currentPage);
 
         return "user/note/notes-page";
     }
 
+
     //Добавление заметки - кнопка
     @GetMapping(value = "/user/notes/add")
-    public String addNotePage(Authentication authentication, Model model) {
+    public String userAddNote(Authentication authentication, Model model) {
 
         User user = userRepo.findByUsername(authentication.getName()).get();
         model.addAttribute("user", user);
@@ -62,38 +70,53 @@ public class NoteController {
 
         note.setAuthor(user);
 
-        model.addAttribute("labels", user.getLabels());
+        //List<Label> labels = new ArrayList<>();
+
+        //model.addAttribute("labels", labels);
         model.addAttribute("categories", user.getCategories());
         model.addAttribute("note", note);
 
         return "user/note/add-note-page";
     }
 
+
     //Добавление заметки - страница
     @PostMapping(value = "/user/notes/add")
-    public String userAddNote(Authentication authentication,@RequestParam("selectedLabels") Long[] selectedLabels, @RequestParam("selectedCategory") Long selectedCategory, @ModelAttribute("note") Note note, Model model) throws IOException {
+    public String userAddNotePage(Authentication authentication,
+                                  /*@RequestParam("labels") List<Label> labels*/
+                                @RequestParam("selectedCategory") Long selectedCategory, @ModelAttribute("note") Note note, Model model) throws IOException {
 
         User user = userRepo.findByUsername(authentication.getName()).get();
 
         note.setAuthor(user);
         note.setTime();
 
-        List<Label> labels = new ArrayList<>();
         Category category = findCategoryById(user.getCategories(), selectedCategory);
         note.setCategory(category);
 
-        for (Long label_id: selectedLabels) {
-            labels.add(findLabelById(user.getLabels(), label_id));
+        Category defCategory = findCategoryById(user.getCategories(), 0L);
+
+        if(note.getCategory() == null){
+            note.setCategory(defCategory);
         }
-        note.setLabels(labels);
+
+        //note.setLabels(labels);
 
         if(note.getName().isEmpty() || note.getName() == null){
             note.setName("Без названия");
         }
 
+        if(note.getText().isEmpty() || note.getText() == null){
+            note.setText("");
+        }
+
         noteRepo.save(note);
 
         loadNotesToUser(user);
+
+        userRepo.save(noteStatisticInit(user));
+
+
 
         return "redirect:/user/notes";
     }
@@ -113,6 +136,9 @@ public class NoteController {
         model.addAttribute("notes",notes);
         model.addAttribute("categories",categories);
 
+        Integer currentPage = 0;
+        model.addAttribute("currentPage", currentPage);
+
         //loadLabelsToUser(user);
 
         return "user/note/selected-notes-page";
@@ -121,7 +147,7 @@ public class NoteController {
 
     //Изменение заметки - кнопка
     @GetMapping(value = "/user/notes/{note_id}/edit")
-    public String addCategoryPage(Authentication authentication,
+    public String editEditNote(Authentication authentication,
                                   @PathVariable Long note_id,
                                   Model model) {
 
@@ -133,13 +159,11 @@ public class NoteController {
         note.setId(note_id);
 
         List<Category> categories = user.getCategories();
-        List<Label> labels = user.getLabels();
-
-
+        //List<Label> labels = note.getLabels();
 
         model.addAttribute("note", note);
         model.addAttribute("categories", categories);
-        model.addAttribute("labels", labels);
+        //model.addAttribute("labels", labels);
         model.addAttribute("note_id", note_id);
 
         return "user/note/edit-note-page";
@@ -148,14 +172,35 @@ public class NoteController {
 
     //Изменение заметки - страница
     @PostMapping(value = "/user/notes/{note_id}/edit")
-    public String userEditCategory(Authentication authentication,
+    public String userEditNotePage(Authentication authentication,
                                    @PathVariable long note_id,
                                    @ModelAttribute("note") Note note,
+                                 /*  @RequestParam("labels") List<Label> labels,*/
+                                   @RequestParam("selectedCategory") Long selectedCategory,
                                    Model model) throws IOException {
 
         User user = userRepo.findByUsername(authentication.getName()).get();
 
         note.setId(note_id);
+        note.setTime();
+
+        //note.setLabels(labels);
+
+        Category category = findCategoryById(user.getCategories(), selectedCategory);
+        note.setCategory(category);
+
+        Category defCategory = findCategoryById(user.getCategories(), 0L);
+        if(note.getCategory() == null){
+            note.setCategory(defCategory);
+        }
+
+        if(note.getName().isEmpty() || note.getName() == null){
+            note.setName("Без названия");
+        }
+
+        if(note.getText().isEmpty() || note.getText() == null){
+            note.setText("");
+        }
 
         noteRepo.save(note);
 
@@ -164,6 +209,19 @@ public class NoteController {
         return "redirect:/user/notes";
     }
 
+    //Удаление заметки
+    @Transactional
+    @GetMapping(value = "/user/notes/{note_id}/delete")
+    public String userDeleteNote(Authentication authentication, @PathVariable long note_id){
+
+        User user = userRepo.findByUsername(authentication.getName()).get();
+
+        noteRepo.deleteByIdAndAuthor(note_id, user);
+
+        loadNotesToUser(user);
+
+        return "redirect:/user/notes";
+    }
 
 
 
@@ -180,18 +238,6 @@ public class NoteController {
         return category;
     }
 
-    Label findLabelById(List<Label> labels, Long label_id) {
-
-        Label label = null;
-
-        for (Label itLabel: labels) {
-            if (itLabel.getId().equals(label_id)) {
-                label = itLabel;
-                return label;
-            }
-        }
-        return label;
-    }
 
     List<Note> findNotesByCategory(List<Note> notes, Long category_id) {
 
@@ -211,6 +257,32 @@ public class NoteController {
         List<Note> notes = noteRepo.findByAuthor(user);
 
         user.setNotes(notes);
+    }
+
+    public User noteStatisticInit(User user){
+
+        Calendar calendar = Calendar.getInstance();
+        Integer currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        Integer currentMonth = calendar.get(Calendar.MONTH) + 1;
+        Integer currentYear = calendar.get(Calendar.YEAR);
+
+        Integer userCurrentDay = user.getUserStat().getCurrentDay();
+        Integer userCurrentMonth = user.getUserStat().getCurrentMonth();
+        Integer userCurrentYear = user.getUserStat().getCurrentYear();
+
+        if (currentDay.equals(userCurrentDay) && currentMonth.equals(userCurrentMonth) && currentYear.equals(userCurrentYear)) {
+            user.getUserStat().setNotePerDay();
+        } else user.getUserStat().setNotePerDayReboot();
+
+        if (currentMonth.equals(userCurrentMonth) && currentYear.equals(userCurrentYear)) {
+            user.getUserStat().setNotePerMonth();
+        } else user.getUserStat().setNotePerMonthReboot();
+
+        if(currentYear.equals(userCurrentYear)){
+            user.getUserStat().setNotePerYear();
+        } else user.getUserStat().setNotePerYearReboot();
+
+        return user;
     }
 
 

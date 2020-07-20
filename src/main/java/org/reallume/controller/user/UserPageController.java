@@ -38,7 +38,7 @@ public class UserPageController {
         User user = userRepo.findByUsername(authentication.getName()).get();
         model.addAttribute("user", user);
 
-        return "user/main-page";
+        return "redirect:/user/notes";
     }
 
 }

@@ -11,10 +11,15 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     Optional<User> findByToken(String token);
 
     void deleteById(Long user_id);
 
     List<User> findAll();
+
+    User findById(long user_id);
+
 
 }

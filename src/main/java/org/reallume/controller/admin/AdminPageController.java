@@ -40,7 +40,7 @@ public class AdminPageController {
         User user = userRepo.findByUsername(authentication.getName()).get();
         model.addAttribute("user", user);
 
-        return "admin/main-page";
+        return "redirect:/admin/statistics";
     }
 
 }

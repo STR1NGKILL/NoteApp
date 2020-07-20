@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin-page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.13.1/css/all.css" rel="stylesheet">
+
+</head>
+<body>
+
+<!--Тело-->
+<div class="container-fluid">
+    <!--Навигационная панель-->
+    <div sec:authorize="isAuthenticated()">
+        <nav class="navbar navbar-expand-lg navbar-light shadow-sm"><a class="navbar-brand"><i class="far fa-clipboard"></i></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigations-04" aria-controls="navigations-04" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navigations-04">
+                <div class="d-flex flex-column flex-lg-row align-items-start justify-content-between w-100">
+                    <ul class="navbar-nav order-2 order-lg-1"><li class="nav-item"><a class="nav-link active" th:href="@{/main}">NoteApp</a></li>
+                        <li th:classappend="${currentPage} == 0?'active':''" class="nav-item"><a class="nav-link" th:href="@{/admin/statistics}">Статистика</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/admin/user-list}">Пользователи</a></li>
+                    </ul>
+                    <ul class="navbar-nav order-1 order-lg-2"><li class="nav-item d-flex"><a class="nav-link p-0 m-0" href="#"><img class="rounded-circle" src="images/23-128.png" height="40" width="40" alt=""></a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navigations-headers-04" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Администратор</a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navigations-headers-04">
+                                <a class="dropdown-item" th:href="@{/admin/profile}">
+                                    <i class="far fa-address-card"></i>
+                                    Профиль
+                                </a>
+                                <a class="dropdown-item" th:href="@{/logout}">
+                                    <i class="fas fa-sign-out-alt" style="color: red"></i>
+                                    <font color="red">Завершить сеанс</font>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!--Статистика-->
+    <section class="py-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Активные пользователи</h3>
+                            <p class="badge badge-success mb-0">Всего</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${usersActivatedCount}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Неактивные пользователи</h3>
+                            <p class="badge badge-success mb-0">Всего</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${usersDeactivatedCount}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Заметки</h3>
+                            <p class="badge badge-success mb-0">Всего</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${notes.size()}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Категории</h3>
+                            <p class="badge badge-success mb-0">Всего</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${categories.size()}">...</p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Входы</h3>
+                            <p class="badge badge-success mb-0">За день</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${loginPerDayOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Входы</h3>
+                            <p class="badge badge-success mb-0">За месяц</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${loginPerMonthOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Входы</h3>
+                            <p class="badge badge-success mb-0">За год</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${loginPerYearOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Регистрации</h3>
+                            <p class="badge badge-success mb-0">За день</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${registrationPerDay}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Регистрации</h3>
+                            <p class="badge badge-success mb-0">За месяц</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${registrationPerMonth}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Регистрации</h3>
+                            <p class="badge badge-success mb-0">За год</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${registrationPerYear}">...</p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Заметки</h3>
+                            <p class="badge badge-success mb-0">За день</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${notePerDayOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Заметки</h3>
+                            <p class="badge badge-success mb-0">За месяц</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${notePerMonthOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mb-lg-0">
+                    <div class="border rounded">
+                        <div class="d-flex border-bottom p-3 w-100 align-items-center">
+                            <h3 class="h5 mr-auto mb-0">Заметки</h3>
+                            <p class="badge badge-success mb-0">За год</p>
+                        </div>
+                        <p class="px-3 pt-4 h3" th:utext="${notePerYearOverall}">...</p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</div>
+<!--Конец-->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+</body>
+</html>
