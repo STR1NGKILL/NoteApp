@@ -75,7 +75,7 @@ public class SecurityController {
             user.setRole("ROLE_USER");
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(emailService.generateToken(user.getUsername()));
-            emailService.sendConfirmationMail(user.getEmail(), user.getUsername(), "http://localhost:8080/users/confirm/" + user.getToken());
+            emailService.sendConfirmationMail(user.getEmail(), user.getUsername(), "https://note-app-practice.herokuapp.com/users/confirm/" + user.getToken());
             userRepository.save(user);
 
             return "successful-registration";
