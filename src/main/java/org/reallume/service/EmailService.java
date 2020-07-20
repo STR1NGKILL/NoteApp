@@ -84,7 +84,7 @@ public class EmailService {
                 "                                                </table>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"text-align:center; font-size:16px; line-height:30px; font-weight:bold; color:#344860;\">Для активации аккаунта пожалуйста перейдите по ссылке:</p>\n" +
-                "                <p style=\"text-align:center; font-size:22px; line-height:30px; font-weight:bold; color:#344860;\"><a href=\"" + link + "\">" + link + "</a></p>\n" +
+                "                <p style=\"text-align:center; font-size:18px; line-height:30px; font-weight:bold; color:#344860;\"><a href=\"" + link + "\">" + link + "</a></p>\n" +
                 "               \n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\n" +
                 "                                                <!-- тело письма -->\n" +
