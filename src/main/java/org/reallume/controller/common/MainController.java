@@ -38,6 +38,7 @@ public class MainController {
         }
 
             return "guest/main-page";
+        //-
 
     }
 
